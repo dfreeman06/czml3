@@ -1,0 +1,99 @@
+{
+  "name": "@poliastro/czml3",
+  "version": "0.1.0",
+  "description": "Python 3 library to write CZML",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "widgets"
+  ],
+  "files": [
+    "lib/**/*.js",
+    "dist/*.js",
+    "css/*.css",
+    "cesium/**/*"
+  ],
+  "homepage": "https://github.com/poliastro/czml3",
+  "bugs": {
+    "url": "https://github.com/poliastro/czml3/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "czml3 contributors",
+    "email": "czml@noreplay.github.com"
+  },
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/poliastro/czml3"
+  },
+  "scripts": {
+    "build": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension:dev",
+    "build:copy": "python scripts/copy_assets.py",
+    "build:schema": "ts-json-schema-generator --path \"node_modules/cesium/Build/Cesium/Cesium.d.ts\" --type \"Entity\" --no-type-check > czml3/cesium.schema.json",
+    "build:prod": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "clean": "yarn clean:lib && yarn clean:labextension",
+    "clean:lib": "rimraf lib",
+    "clean:labextension": "rimraf czml3/labextension",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx",
+    "test": "jest",
+    "watch": "npm-run-all -p watch:*",
+    "watch:lib": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^1.1.10 || ^2.0.0 || ^3.0.0 || ^4.0.0",
+    "@jupyter-widgets/controls": "^3.0.0",
+    "@jupyterlab/apputils": "^3.0.0",
+    "cesium": "~1.90.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.0",
+    "@babel/preset-env": "^7.5.0",
+    "@jupyterlab/builder": "^3.0.0",
+    "@phosphor/application": "^1.6.0",
+    "@phosphor/widgets": "^1.6.0",
+    "@types/jest": "^26.0.0",
+    "@types/webpack-env": "^1.13.6",
+    "@typescript-eslint/eslint-plugin": "^3.6.0",
+    "@typescript-eslint/parser": "^3.6.0",
+    "acorn": "^7.2.0",
+    "css-loader": "^3.2.0",
+    "eslint": "^7.4.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "fs-extra": "^7.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.0.0",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^2.0.5",
+    "quicktype": "^15.0.260",
+    "rimraf": "^2.6.2",
+    "source-map-loader": "^1.1.3",
+    "style-loader": "^1.0.0",
+    "ts-jest": "^26.0.0",
+    "ts-json-schema-generator": "^0.98.0",
+    "ts-loader": "^8.0.0",
+    "typescript": "~4.5.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0"
+  },
+  "jupyterlab": {
+    "extension": "lib/plugin",
+    "outputDir": "czml3/labextension/",
+    "webpackConfig": "./webpack.config.js",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    }
+  }
+}

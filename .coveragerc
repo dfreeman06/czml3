@@ -1,0 +1,2 @@
+[run]
+omit = czml3/tests/*

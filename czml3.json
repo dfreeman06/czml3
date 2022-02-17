@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "czml3/extension": true
+  }
+}
