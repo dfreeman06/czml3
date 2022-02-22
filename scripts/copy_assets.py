@@ -20,10 +20,50 @@ TEMPLATE = """<!DOCTYPE html>
 <body>
   <div id="cesiumContainer"></div>
   <script>
-    // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-    const viewer = new Cesium.Viewer('cesiumContainer', {
-      terrainProvider: Cesium.createWorldTerrain()
-    });
+    // Initialize the Cesium Viewer in the HTML element with the
+    // `cesiumContainer` ID.
+
+    class IPyViewer extends Cesium.Viewer {
+        constructor(id, options){
+            super(id, options);
+            this.Cesium = Cesium;
+            this.ready = new Promise((resolve, reject)=>{
+                this.ready_resolver = ()=> {
+                    resolve(this);
+                    this.ready_resolver = null;
+                };
+            });
+        }
+
+        flyTo(target, options){
+            var promise = super.flyTo(target, options);
+            if (this.ready_resolver){
+                promise.then(this.ready_resolver)
+            }
+            return promise
+        }
+
+        zoomTo(target, options){
+            var promise = super.zoomTo(target, options);
+            if (this.ready_resolver){
+                promise.then(this.ready_resolver)
+            }
+            return promise
+        }
+
+    }
+    //Returns a Promise with the active Cesium IPyViewer
+    function start_cesium(options){
+        window.viewer = new IPyViewer('cesiumContainer', {
+            ...options,
+            terrainProvider: Cesium.createWorldTerrain()
+        });
+
+        window.viewer.flyTo();
+        window.viewer.flyTo();
+        return viewer.ready
+
+    }
   </script>
  </div>
 </body>

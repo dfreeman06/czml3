@@ -32,7 +32,9 @@
   "scripts": {
     "build": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension:dev",
     "build:copy": "python scripts/copy_assets.py",
-    "build:schema": "ts-json-schema-generator --path \"node_modules/cesium/Build/Cesium/Cesium.d.ts\" --type \"Entity\" --no-type-check > czml3/cesium.schema.json",
+    "build:schema": "yarn build:schema_entity && yarn build:schema_viewer",
+    "build:schema_entity": "ts-json-schema-generator --path \"node_modules/cesium/Build/Cesium/Cesium.d.ts\" --type \"Entity\" --no-type-check > czml3/cesium.entity.schema.json",
+    "build:schema_viewer": "ts-json-schema-generator --path \"src/_schema_types.d.ts\" --type \"ViewerOptions\" --no-type-check > czml3/cesium.viewer.schema.json",
     "build:prod": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",

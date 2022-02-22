@@ -38,8 +38,8 @@ function activateWidgetExtension(
     name: MODULE_NAME,
     version: MODULE_VERSION,
     exports: async () => {
-      const { CZMLModel, CZMLView } = await import('./widget');
-      return { CZMLModel, CZMLView } as ExportMap;
+      const { CZMLModel, CZMLView, CZMLClockModel, CZMLCameraModel, CZMLDirectionModel, CZMLPositionModel } = await import('./widgets');
+      return { CZMLModel, CZMLView, CZMLClockModel, CZMLCameraModel, CZMLDirectionModel, CZMLPositionModel } as ExportMap;
     }
   });
 }

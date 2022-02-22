@@ -1,0 +1,30 @@
+name: czml
+commands:
+  setup:
+    unix: |-
+      jlpm &&
+      jlpm build &&
+      pip install -e . &&
+      jupyter labextension develop --overwrite .
+  watch:
+    unix: |-
+      jlpm build && jlpm watch & jupyter lab --watch
+
+
+channels:
+  - conda-forge
+
+platforms:
+- linux-64
+
+env_specs:
+  default:
+    description: Default environment spec for running commands
+    packages:
+    - python >3.9,3.10
+    - jupyterlab >3.2,<3.3
+    - nodejs >14,<=15
+    # dev deps
+    - jupyter-packaging==0.7.9
+    - setuptools
+    - wheel
