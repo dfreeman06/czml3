@@ -6,10 +6,12 @@
 import { IFrame, } from '@jupyterlab/apputils';
 
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
-import * as Cesium from "cesium";
+// import * as Cesium from "cesium";
+import { CZMLDataSourceModel } from '.';
 import { IPyViewer } from './viewer';
-
+import { SetCesium } from "./load_cesium";
 // import { Message } from '@lumino/messaging';
+import type Cesium from "cesium";
 
 
 /**
@@ -66,6 +68,7 @@ export class CesiumFrame extends IFrame {
                     (<any>this._frame.contentWindow).start_cesium(options).then(
                         (viewer: IPyViewer) => {
                             this.initialize(viewer)
+                            SetCesium(viewer.Cesium);
                         }
                     )
                 }
@@ -90,6 +93,13 @@ export class CesiumFrame extends IFrame {
     setDataSource(doc: Cesium.Entity): void {
         this.viewer.dataSources.removeAll();
         this.viewer.dataSources.add(this.viewer.Cesium.CzmlDataSource.load(doc))
+    }
+
+    addDataSource(datasource: CZMLDataSourceModel){
+        this.viewer.dataSources.add(datasource.source);
+    }
+    removeDataSource(datasource: CZMLDataSourceModel){
+        this.viewer.dataSources.remove(datasource.source);
     }
 }
 

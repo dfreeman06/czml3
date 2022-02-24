@@ -1,0 +1,158 @@
+{
+  "$ref": "#/definitions/ICameraMessage",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Cartesian3": {
+      "additionalProperties": false,
+      "description": "A 3D Cartesian point.",
+      "properties": {
+        "x": {
+          "description": "The X component.",
+          "type": "number"
+        },
+        "y": {
+          "description": "The Y component.",
+          "type": "number"
+        },
+        "z": {
+          "description": "The Z component.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "type": "object"
+    },
+    "HeadingPitchRoll": {
+      "additionalProperties": false,
+      "description": "A rotation expressed as a heading, pitch, and roll. Heading is the rotation about the negative z axis. Pitch is the rotation about the negative y axis. Roll is the rotation about the positive x axis.",
+      "properties": {
+        "heading": {
+          "description": "Gets or sets the heading.",
+          "type": "number"
+        },
+        "pitch": {
+          "description": "Gets or sets the pitch.",
+          "type": "number"
+        },
+        "roll": {
+          "description": "Gets or sets the roll.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "heading",
+        "pitch",
+        "roll"
+      ],
+      "type": "object"
+    },
+    "ICameraMessage": {
+      "$ref": "#/definitions/IFlyToMessage"
+    },
+    "IFlyToMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "flyTo",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": false,
+          "properties": {
+            "convert": {
+              "type": "boolean"
+            },
+            "destination": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Cartesian3"
+                },
+                {
+                  "$ref": "#/definitions/Rectangle"
+                }
+              ]
+            },
+            "flyOverLongitude": {
+              "type": "number"
+            },
+            "flyOverLongitudeWeight": {
+              "type": "number"
+            },
+            "maximumHeight": {
+              "type": "number"
+            },
+            "orientation": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Cartesian3"
+                },
+                {
+                  "$ref": "#/definitions/HeadingPitchRoll"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "pitchAdjustHeight": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "destination",
+            "orientation"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "action",
+        "options"
+      ],
+      "type": "object"
+    },
+    "Rectangle": {
+      "additionalProperties": false,
+      "description": "A two dimensional region specified as longitude and latitude coordinates.",
+      "properties": {
+        "east": {
+          "description": "The easternmost longitude in radians in the range [-Pi, Pi].",
+          "type": "number"
+        },
+        "height": {
+          "description": "Gets the height of the rectangle in radians.",
+          "type": "number"
+        },
+        "north": {
+          "description": "The northernmost latitude in radians in the range [-Pi/2, Pi/2].",
+          "type": "number"
+        },
+        "south": {
+          "description": "The southernmost latitude in radians in the range [-Pi/2, Pi/2].",
+          "type": "number"
+        },
+        "west": {
+          "description": "The westernmost longitude in radians in the range [-Pi, Pi].",
+          "type": "number"
+        },
+        "width": {
+          "description": "Gets the width of the rectangle in radians.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "west",
+        "south",
+        "east",
+        "north",
+        "width",
+        "height"
+      ],
+      "type": "object"
+    }
+  }
+}

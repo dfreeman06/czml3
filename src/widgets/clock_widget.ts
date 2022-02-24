@@ -55,6 +55,9 @@ export class CZMLClockModel extends BoxModel {
   };
 
   set clock(clock: Clock) {
+    if (this._clock){
+      throw new Error("Clock already set");
+    }
     this._clock = clock;
     this._clock.onTick.addEventListener(this.update, this);
   }
