@@ -156,3 +156,5 @@ czml3/labextension/*.tgz
 # Packed lab extensions
 czml3/labextension
 cesium/
+
+.ipynb_checkpoints/

@@ -30,24 +30,24 @@
     "url": "https://github.com/poliastro/czml3"
   },
   "scripts": {
-    "build": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension:dev",
+    "build": "yarn build:schema && yarn build:lib && yarn build:labextension:dev",
     "build:copy": "python scripts/copy_assets.py",
     "build:schema": "yarn build:schema_entity && yarn build:schema_viewer && yarn build:schema_camera_message",
     "build:schema_entity": "ts-json-schema-generator --path \"node_modules/cesium/Build/Cesium/Cesium.d.ts\" --type \"Entity\" --no-type-check > czml3/cesium.entity.schema.json",
     "build:schema_viewer": "ts-json-schema-generator --path \"src/types/schema_viewer_options.d.ts\" --type \"ViewerOptions\" --no-type-check > czml3/cesium.viewer.schema.json",
     "build:schema_camera_message": "ts-json-schema-generator --path \"src/types/camera_messages.ts\" --type \"ICameraMessage\" --no-type-check > czml3/camera_message.schema.json",
-    "build:prod": "yarn build:schema && yarn build:copy && yarn build:lib && yarn build:labextension",
+    "build:prod": "yarn clean && yarn build:schema && yarn build:lib && yarn build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
-    "build:lib": "tsc",
+    "build:lib": "tsc -b",
     "clean": "yarn clean:lib && yarn clean:labextension",
-    "clean:lib": "rimraf lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:labextension": "rimraf czml3/labextension",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx",
     "test": "jest",
     "watch": "npm-run-all -p watch:*",
-    "watch:lib": "tsc -w",
+    "watch:lib": "tsc -b -w",
     "watch:labextension": "jupyter labextension watch ."
   },
   "dependencies": {
@@ -67,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
     "acorn": "^7.2.0",
+    "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^3.2.0",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
@@ -95,6 +96,10 @@
     "sharedPackages": {
       "@jupyter-widgets/base": {
         "bundled": false,
+        "singleton": true
+      },
+      "cesium": {
+        "bundled": true,
         "singleton": true
       }
     }

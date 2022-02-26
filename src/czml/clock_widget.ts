@@ -11,9 +11,8 @@ import { MODULE_NAME, MODULE_VERSION } from '../version';
 
 import { Clock } from "cesium";
 
-import { IPyViewer } from './viewer';
 import JulianDate from 'cesium/Source/Core/JulianDate';
-
+import {type CesiumContainer} from "./cesiumframe";
 
 
 export class CZMLClockModel extends BoxModel {
@@ -25,7 +24,7 @@ export class CZMLClockModel extends BoxModel {
   static view_module_version = MODULE_VERSION;
 
   _clock: Clock;
-  viewer: IPyViewer;
+  container: CesiumContainer;
 
   private _currentTime: JulianDate
 
@@ -66,9 +65,9 @@ export class CZMLClockModel extends BoxModel {
     return this._clock
   }
 
-  set_viewer(viewer: IPyViewer) {
-    this.viewer = viewer;
-    this.clock = viewer.clock;
+  set_viewer(container: CesiumContainer) {
+    this.container = container;
+    this.clock = container.viewer.clock;
   }
 
   update(): void {
@@ -83,7 +82,7 @@ export class CZMLClockModel extends BoxModel {
   }
 
   toIso8601(time: JulianDate): string {
-    let toIso8601 = this.viewer.Cesium.JulianDate.toIso8601;
+    let toIso8601 = this.container.Cesium.JulianDate.toIso8601;
     // JulianDate
     console.log("convert time");
     let rep = toIso8601(time);
@@ -97,7 +96,7 @@ export class CZMLClockModel extends BoxModel {
   }
 
   set_cesium_current_time(): void {
-    let fromIso8601 = this.viewer.Cesium.JulianDate.fromIso8601;
+    let fromIso8601 = this.container.Cesium.JulianDate.fromIso8601;
     console.log("set cesium time");
     this.clock.currentTime = fromIso8601(this.get("current_time"));
   }

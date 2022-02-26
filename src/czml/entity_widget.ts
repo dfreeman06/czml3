@@ -11,8 +11,8 @@ import { UUID } from "@lumino/coreutils";
 import { MODULE_NAME, MODULE_VERSION } from '../version';
 
 import { Entity, EntityCollection, Event } from "cesium";
-import { IPyViewer } from './viewer';
 import { create_model_czml } from "./widget_utilities";
+import type Cesium from "cesium";
 
 
 export class CZMLEntityModel extends WidgetModel {
@@ -24,7 +24,7 @@ export class CZMLEntityModel extends WidgetModel {
     static view_module_version = MODULE_VERSION
 
     _entity: Entity;
-    viewer: IPyViewer;
+    viewer: Cesium.Viewer;
     _lifecycle_events: Event.RemoveCallback[];
 
     defaults() {
@@ -44,7 +44,7 @@ export class CZMLEntityModel extends WidgetModel {
         this.on("msg:custom", this.command, this);
     }
 
-    set_viewer(viewer: IPyViewer){
+    set_viewer(viewer: Cesium.Viewer){
         this.viewer = viewer
     }
 
@@ -71,7 +71,7 @@ export class CZMLEntityCollectionModel extends WidgetModel {
     static view_module_version = MODULE_VERSION
 
     _entity_collection: EntityCollection;
-    viewer: IPyViewer;
+    viewer: Cesium.Viewer;
     _lifecycle_events: Event.RemoveCallback[];
 
     defaults() {
@@ -95,7 +95,7 @@ export class CZMLEntityCollectionModel extends WidgetModel {
         this.on("msg:custom", this.command, this);
     }
 
-    set_viewer(viewer: IPyViewer){
+    set_viewer(viewer: Cesium.Viewer){
         this.viewer = viewer
     }
 

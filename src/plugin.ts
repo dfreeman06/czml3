@@ -10,7 +10,6 @@ import { ExportMap, IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
 const EXTENSION_ID = '@poliastro/czml3:plugin';
-const DEBUG = false;
 
 /**
  * The example plugin.
@@ -31,14 +30,11 @@ function activateWidgetExtension(
   app: Application<Widget>,
   registry: IJupyterWidgetRegistry
 ): void {
-  if (DEBUG) {
-    import('./_static').catch(console.warn);
-  }
   registry.registerWidget({
     name: MODULE_NAME,
     version: MODULE_VERSION,
     exports: async () => {
-      const { CZMLModel, CZMLView, CZMLClockModel, CZMLCameraModel, CZMLCartesian3Model, CZMLCzmlDataSourceModel, CZMLDataSourceModel, CZMLEntityCollectionModel, CZMLEntityModel } = await import('./widgets');
+      const { CZMLModel, CZMLView, CZMLClockModel, CZMLCameraModel, CZMLCartesian3Model, CZMLCzmlDataSourceModel, CZMLDataSourceModel, CZMLEntityCollectionModel, CZMLEntityModel } = await import('./czml');
       return { CZMLModel, CZMLView, CZMLClockModel, CZMLCameraModel, CZMLCartesian3Model, CZMLCzmlDataSourceModel, CZMLDataSourceModel, CZMLEntityCollectionModel, CZMLEntityModel } as ExportMap;
     }
   });

@@ -10,10 +10,11 @@ import { BoxModel } from '@jupyter-widgets/controls';
 import { MODULE_NAME, MODULE_VERSION } from '../version';
 
 import { DataSource } from "cesium";
-import * as Cesium from "cesium";
-import { IPyViewer } from './viewer';
+import type Cesium from "cesium";
+// TODO this is making Cesium Concrete
+// import * as Cesium from "cesium";
 import { CZMLEntityCollectionModel } from '.';
-// import { GetCesium } from './load_cesium';
+import { GetCesium } from './load_cesium';
 
 
 // import CzmlDataSource from 'cesium/Source/DataSources/CzmlDataSource';
@@ -27,7 +28,7 @@ export class CZMLDataSourceModel extends BoxModel {
     static view_module_version = MODULE_VERSION;
 
     source: DataSource;
-    viewer: IPyViewer;
+    viewer: Cesium.Viewer;
 
     defaults() {
         return {
@@ -106,9 +107,8 @@ export class CZMLCzmlDataSourceModel extends CZMLDataSourceModel {
     }
 
     async load(czml:any, options:any){
-        // TODO need to get better handle on the Cesium library...
-        let cesium: typeof Cesium = (<any>window).Cesium
-        // let cesium = await GetCesium;
+        let cesium = await GetCesium;
+        console.log("cesium loaded");
         cesium.CzmlDataSource.load(czml, options).then((source:DataSource)=>this.setDataSource(source));
     }
 }

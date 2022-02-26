@@ -9,9 +9,9 @@ import { BoxModel } from '@jupyter-widgets/controls';
 
 import { MODULE_NAME, MODULE_VERSION } from '../version';
 
-import { Camera, Event, Cartesian3 } from "cesium";
-import { IPyViewer } from './viewer';
+import type Cesium from "cesium";
 import { ICameraMessage } from '../types/camera_messages';
+import { type CesiumContainer } from "./cesiumframe";
 
 
 export class CZMLCartesian3Model extends BoxModel {
@@ -34,7 +34,7 @@ export class CZMLCartesian3Model extends BoxModel {
         };
     }
 
-    update(value: Cartesian3){
+    update(value: Cesium.Cartesian3){
         this.set("x", value.x);
         this.set("y", value.y);
         this.set("z", value.z);
@@ -51,9 +51,9 @@ export class CZMLCameraModel extends BoxModel {
     static view_module = null; // Set to null if no view
     static view_module_version = MODULE_VERSION;
 
-    _camera: Camera;
-    viewer: IPyViewer;
-    _lifecycle_events: Event.RemoveCallback[];
+    _camera: Cesium.Camera;
+    _lifecycle_events: Cesium.Event.RemoveCallback[];
+    container: CesiumContainer;
 
     defaults() {
         return {
@@ -86,7 +86,7 @@ export class CZMLCameraModel extends BoxModel {
         return this.get("direction")
     }
 
-    set camera(camera: Camera) {
+    set camera(camera: Cesium.Camera) {
         if (this._camera){
             // TODO call Remove callbacks, until then...
             throw new Error("Camera already set");
@@ -99,15 +99,14 @@ export class CZMLCameraModel extends BoxModel {
         ]
     }
 
-    get camera(): Camera {
+    get camera(): Cesium.Camera {
         return this._camera
     }
 
-    set_viewer(viewer: IPyViewer){
-        this.viewer = viewer;
-        this.camera = viewer.camera;
-        this.handleMove();
-    }
+    set_viewer(container: CesiumContainer) {
+        this.container = container;
+        this.camera = container.viewer.camera;
+      }
 
     handleMoveStart(){
         this.handleMove();

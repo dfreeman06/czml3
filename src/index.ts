@@ -2,4 +2,4 @@
 // Distributed under the terms of the Modified BSD License.
 
 export * from './version';
-export * from './widgets/czml_widget';
+export * from './czml/czml_widget';

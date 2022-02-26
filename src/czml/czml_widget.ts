@@ -13,11 +13,12 @@ import { BoxModel, BoxView } from '@jupyter-widgets/controls';
 import { MODULE_NAME, MODULE_VERSION } from '../version';
 // Import the CSS
 import '../../css/widget.css';
-import { CesiumFrame } from './cesiumframe';
+// import { CesiumFrame } from './cesiumframe';
+import type { CesiumContainer } from './cesiumframe';
 import { CZMLClockModel } from './clock_widget';
 import { CZMLCameraModel } from './camera_widget';
 import { CZMLDataSourceModel } from './datasource_widget';
-import * as Cesium from "cesium";
+import type Cesium from "cesium";
 import DataSource from 'cesium/Source/DataSources/DataSource';
 
 
@@ -43,9 +44,9 @@ export class CZMLModel extends BoxModel {
 
   static serializers = {
     ...BoxModel.serializers,
-    clock: {deserialize},
-    camera: {deserialize},
-    datasources: {deserialize},
+    clock: { deserialize },
+    camera: { deserialize },
+    datasources: { deserialize },
   };
 
   get clock(): CZMLClockModel {
@@ -67,40 +68,42 @@ export class CZMLModel extends BoxModel {
 }
 
 export class CZMLView extends BoxView {
-  protected czml: CesiumFrame;
+  protected czml: CesiumContainer;
   model: CZMLModel;
 
   initialize(parameters: WidgetView.InitializeParameters<CZMLModel>): void {
     super.initialize(parameters);
-    this.czml = new CesiumFrame();
 
+    this.make_cesium().catch(console.warn);
+
+  }
+
+  async make_cesium() {
+    const { CesiumContainer } = await import("./cesiumframe");
+    this.czml = new CesiumContainer();
+    this.czml.options = this.model.options;
     this.pWidget.addWidget(this.czml);
     (<any>window).czmlwidget = this;
-    this.displayed.then(() => {
-      this.czml.load(this.model.options)
-    });
 
-    this.czml.ready.then((viewer)=>{
-      // this.camera
-      if (this.model.datasources){
-        // this.updateDatasources();
+    this.czml.ready.then((viewer) => {
+      // Set inital data sources
+      if (this.model.datasources) {
+        this.updateDatasources();
       }
-      console.log("grab camera and clock objects", this.czml.viewer.camera);
-      console.log("model clock", this.model.clock);
-      this.model.clock.set_viewer(this.czml.viewer);
-      this.model.camera.set_viewer(this.czml.viewer);
+      // Set inital data sources
+      this.model.clock.set_viewer(this.czml);
+      this.model.camera.set_viewer(this.czml);
     })
-
   }
 
   render() {
     this.model.on("change:datasources", this.updateDatasources, this)
   }
 
-  updateDatasources (){
+  updateDatasources() {
     let newValue = this.model.get("datasources");
     let oldValue = this.model.previous("datasources");
-    if (isEmpty(oldValue)){
+    if (isEmpty(oldValue)) {
       oldValue = [];
     }
 
@@ -108,24 +111,22 @@ export class CZMLView extends BoxView {
     console.log("update Datasources", newValue);
     console.log("update Datasources", oldValue);
 
-    let entering: CZMLDataSourceModel[] = newValue.filter((x: DataSource) => !oldValue.includes(x) );
-    let exiting: CZMLDataSourceModel[] = oldValue.filter((x: DataSource) => !newValue.includes(x) );
+    let entering: CZMLDataSourceModel[] = newValue.filter((x: DataSource) => !oldValue.includes(x));
+    let exiting: CZMLDataSourceModel[] = oldValue.filter((x: DataSource) => !newValue.includes(x));
 
-
-
-    for (let ds of entering){
+    for (let ds of entering) {
       console.log("adding", ds);
       this.czml.addDataSource(ds);
     }
-    for (let ds of exiting){
+    for (let ds of exiting) {
       console.log("removing", ds);
       this.czml.removeDataSource(ds);
     }
   }
 }
 
-function isEmpty(obj:any):boolean {
-  if (!obj){
+function isEmpty(obj: any): boolean {
+  if (!obj) {
     return true
   }
   return Object.keys(obj).length === 0;
