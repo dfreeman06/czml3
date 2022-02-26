@@ -20,6 +20,7 @@ import { CZMLCameraModel } from './camera_widget';
 import { CZMLDataSourceModel } from './datasource_widget';
 import type Cesium from "cesium";
 import DataSource from 'cesium/Source/DataSources/DataSource';
+import { GetCesium } from "./load_cesium";
 
 
 export class CZMLModel extends BoxModel {
@@ -49,6 +50,12 @@ export class CZMLModel extends BoxModel {
     datasources: { deserialize },
   };
 
+  initialize(attributes: any, options: { model_id: string; comm?: any; widget_manager: any; }): void {
+    super.initialize(attributes, options);
+    this.on("change:ion_token", this.updateToken, this);
+    this.updateToken();
+  }
+
   get clock(): CZMLClockModel {
     return this.get('clock');
   }
@@ -63,6 +70,15 @@ export class CZMLModel extends BoxModel {
 
   get datasources(): CZMLDataSourceModel[] {
     return this.get("datasources")
+  }
+
+  async updateToken(): Promise<void> {
+    let token: string = this.get("ion_token");
+    if (token) {
+      let cesium = await GetCesium;
+      cesium.Ion.defaultAccessToken = token;
+    }
+
   }
 
 }
@@ -108,18 +124,13 @@ export class CZMLView extends BoxView {
     }
 
     // calculate entering and exiting datasources
-    console.log("update Datasources", newValue);
-    console.log("update Datasources", oldValue);
-
     let entering: CZMLDataSourceModel[] = newValue.filter((x: DataSource) => !oldValue.includes(x));
     let exiting: CZMLDataSourceModel[] = oldValue.filter((x: DataSource) => !newValue.includes(x));
 
     for (let ds of entering) {
-      console.log("adding", ds);
       this.czml.addDataSource(ds);
     }
     for (let ds of exiting) {
-      console.log("removing", ds);
       this.czml.removeDataSource(ds);
     }
   }

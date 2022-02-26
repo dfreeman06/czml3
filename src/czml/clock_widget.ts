@@ -84,7 +84,6 @@ export class CZMLClockModel extends BoxModel {
   toIso8601(time: JulianDate): string {
     let toIso8601 = this.container.Cesium.JulianDate.toIso8601;
     // JulianDate
-    console.log("convert time");
     let rep = toIso8601(time);
     let matches = rep.match(/(?<prefix>.*)\.(?<millis>.*)Z/);
     if (matches) {
@@ -97,7 +96,6 @@ export class CZMLClockModel extends BoxModel {
 
   set_cesium_current_time(): void {
     let fromIso8601 = this.container.Cesium.JulianDate.fromIso8601;
-    console.log("set cesium time");
     this.clock.currentTime = fromIso8601(this.get("current_time"));
   }
 

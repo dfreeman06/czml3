@@ -128,17 +128,13 @@ export class CZMLEntityCollectionModel extends WidgetModel {
 
     async register(collection: EntityCollection): Promise<void>{
         // return
-        let manager = this.widget_manager;
-        console.log("start registering...", manager);
         let entities: CZMLEntityModel[] = [];
 
         this._entity_collection = collection;
 
         entities = await Promise.all(collection.values.map(this.create_entity));
         this.set("values", entities)
-        console.log("registering entities", entities);
         setTimeout(() => {
-            console.log("pause");
             this.save_changes();
         }, 1000);
 

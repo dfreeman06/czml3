@@ -9,6 +9,8 @@ commands:
   watch:
     unix: |-
       jlpm build && jlpm watch & jupyter lab --watch
+  lab:
+    unix: jupyter lab
 
 
 channels:

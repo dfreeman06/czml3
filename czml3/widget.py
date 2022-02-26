@@ -118,6 +118,7 @@ class CZMLWidget(DOMWidget):
     camera = Instance(CZMLCamera).tag(sync=True, **widget_serialization)
     clock = Instance(CZMLClock).tag(sync=True, **widget_serialization)
     datasources = TypedTuple(Instance(DataSource), kw={}).tag(sync=True, **widget_serialization)
+    ion_token = Unicode().tag(sync=True)
 
     def __init__(self, **kwargs) -> None:
         if "camera" not in kwargs:
@@ -126,8 +127,6 @@ class CZMLWidget(DOMWidget):
             kwargs["clock"] = CZMLClock()
         super().__init__(**kwargs)
     # document = attr.ib(default=Document([Preamble()]))
-    # cesium_version = attr.ib(default="1.88")
-    # ion_token = attr.ib(default="")
     # terrain = attr.ib(default=TERRAIN["Ellipsoid"])
     # imagery = attr.ib(default=IMAGERY["OSM"])
 

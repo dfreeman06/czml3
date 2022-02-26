@@ -67,13 +67,9 @@ export class CZMLDataSourceModel extends BoxModel {
     }
 
     setDataSource(datasource:DataSource) {
-        console.log("CZML Set data source", datasource);
         this.source = datasource;
         // TODO create CZMLEntityWidgets for each entity in the collection
         this.entities.register(datasource.entities);
-
-
-        console.log(this.source);
     }
 }
 
@@ -100,7 +96,6 @@ export class CZMLCzmlDataSourceModel extends CZMLDataSourceModel {
     command(content: any){  //TODO make messages for loading
         switch (content.action) {
             case "load":
-                console.log("CZML Loading...", content);
                 this.load(content.czml, content?.options);
                 break
         }
@@ -108,7 +103,6 @@ export class CZMLCzmlDataSourceModel extends CZMLDataSourceModel {
 
     async load(czml:any, options:any){
         let cesium = await GetCesium;
-        console.log("cesium loaded");
         cesium.CzmlDataSource.load(czml, options).then((source:DataSource)=>this.setDataSource(source));
     }
 }
